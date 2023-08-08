@@ -8,8 +8,6 @@ class Student:
     def __init__(self, name, age, phone, classes):
         ''' The init function is called automatically when the object is created'''
 
-        print("Hello")
-
         # Assign properties to new student
         # All properties have an underscore in front
         # This means the property is private to the object
@@ -81,5 +79,51 @@ Student("Joanna Smith", 17, "021321321", ["DIGI", "BIOL"])
 def search():
     ''' User searches for student '''
 
+      #user enters name to search for
     name_search = input("Enter name to search for: ")
-    
+    #loop through lists of studentes
+    #cheack if the name of a student matches name_search
+    #if so, display their details
+
+    for s in students:
+      #for an exact match use: if name_search == s.get_name():
+      #for a search matching any characters use: if name_search in s.get_name():
+        if name_search.lower()+" " in s.get_name().lower() or " " +name_search.lower() in s.get_mame().lower():
+            s.display_my_info()
+
+def display_all():
+      ''' Display names of all studentds'''
+
+      for s in students:
+          s.display_my_info()
+
+def add_student():
+    ''' User can add a new student '''
+
+    print("Enter new student details")
+    print("-"*20)
+    name = input("Name: ")
+    #put error catching  around age (use try and exept)
+    enter_age = True
+    while enter_age:
+        try:
+            age= int(input("Age: "))
+            enter_age = False
+        except ValueError:
+            print("Enter an integer")
+            phone = input("PHone: ")
+            student_classes = []
+            enter_classes = True
+            while enter_class:
+                  new_class = input("Class code (end to stop): ")
+                  if new_class == "end":
+                        #user has finished entering classes
+                        enter_class = False
+            else: 
+                  #add class code to list of classes
+                  student_classes.append(new_class)
+            #create new student
+            Student(name, age, phone, student_classes)
+                
+add_student()
+search()

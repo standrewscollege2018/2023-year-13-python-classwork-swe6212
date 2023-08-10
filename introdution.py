@@ -141,10 +141,28 @@ def generate_students():
                 i += 1
             Student(line[0], int(line[1]), line[2], classes)
 
+# list to store all students class
+student_class = []
+
 
 # Create a function that gets the user to enter a class code, then
 # returns a list of all students who are in that class, along with a 
 # count of how many there are
+def class_search():
+    ''' User searches for students class code '''
+
+    # User enters class name to search for
+    class_search = input("Enter class name to search for: ")
+    # Loop through list of students class
+    # Check if the class name of a student matches class_search
+    # If so, display their details
+    for s in student_class:
+        # for an exact match use: if class_search == s.get_class():
+        # for a search matching any characters use: if class_search in s.get_class():
+
+        # This line returns results if either first or last name matches
+        if class_search.lower()+" " in s.get_class().lower() or " "+class_search.lower() in s.get_class().lower():
+            s.display_my_info()
 
 
 

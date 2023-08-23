@@ -1,9 +1,8 @@
-''' Student management system '''
+''' Student management system with GUI '''
 
 from tkinter import *
-from tkinter import messagebox 
 
-################ Define student class #################
+############### Class definition for Student ###################
 
 class Student:
     ''' Student objects have attributes like name, phone, address, and a list of
@@ -26,8 +25,9 @@ class Student:
         # Student is automatically enrolled
         self._enrolled = True
 
-        # Add the new student to the students list
+        # Add the new student to the students list and name to student_names list
         students.append(self)
+        student_names.append(self._name)
     
     
     def get_name(self):
@@ -59,17 +59,33 @@ class Student:
         ''' This is a setter function that changes the value of a property '''
 
         self._enrolled = False
-        
-        students.append(self)
-        student_names.append(student_names)
-################ Lists to store students and their names #################
 
+    def display_my_info(self):
+        ''' This displays all information about the student '''
+
+        print("=" * 30)
+        print(f"Name: {self._name}")
+        print(f"Age: {self._age}")
+        print(f"Phone: {self._phone}")
+        # Display all classes on one line
+        print(f"Classes: ", end=" ")
+        for c in self._classes:
+            print(c, end=" ")
+        print()
+        print("=" * 30)
+
+################ Lists to store students, names and classes #############
+
+# lists to store all students
 students = []
+# Store all student names
 student_names = []
-classes = ['MAT', 'GRA', 'ENG', 'BIO', 'DTC', 'PHY']
+# Store all class codes
+class_list = []
+# List that stores names of students in selected class
+student_class_names = []
 
-
-################ Functions #####################
+########### Functions ###################
 
 def generate_students():
     ''' Function imports students from csv file '''
@@ -82,38 +98,75 @@ def generate_students():
             i = 3
             while i in range(3,8):
                 classes.append(line[i])
+                if line[i] not in class_list:
+                    class_list.append(line[i])
                 i += 1
             Student(line[0], int(line[1]), line[2], classes)
 
+def display_details():
+    ''' Display details of student selected in student_listbox'''
 
-def populate_listbox():
-    ''' reload and repopulate the listbox'''
-    #clear list box
-    student_listbox.delete(0,END)
-    #then repopulate 
-    for name in student_names:
-        student_listbox.insert(END, name)
+    global student_class_names
+    # Start by getting the index of the selected student from the list of names
+    for c in student_listbox.curselection():
+        selected_student = student_class_names[c]
+    # Next we find the matching student and display their info in a label
+    for s in students:
+        if s.get_name() == selected_student:
+            details = f"{'='*30}\nName: {s.get_name()}\nPhone: {s.get_phone()}\nAge: {s.get_age()}\nClasses: {s.get_classes()}\n{'='*30}"
+            student_details.set(details)
 
+def populate_student_list(class_code):
+    ''' Fill the listbox with students in the selected class '''
 
-################## GUI ###################
+    global student_class_names
 
-# create and configure the main window
-root = Tk()
-root.title("Demo of oo and Tkinter")
-root.geometry('400x400')
+    # First, delete everything in the listbox
+    student_listbox.delete(0, END)
 
-classes_menue = StringVar()
-selected_class.set(classes[0])
-classes_menue = OptionMenu(root, selected_class, *classes, command=filter_students )
-classes_menue.grid(row=0)
+    # create list of student names in selected class
+    student_class_names = []
+    for s in students:
+        if class_code in s.get_classes():
+            student_class_names.append(s.get_name())
 
+    # Then populate it with students from selected class
+    for s in students:
+        if class_code in s.get_classes():
+            student_listbox.insert(END, s.get_name())
 
-student_listbox = Listbox(root)
-student_listbox.grid(row=0)
-
-#Import students and populate the listbox 
+# Import all students from csv
 generate_students()
-populate_listbox()
 
-#start the program running
+
+############ GUI elements ################
+
+# Main window
+root = Tk()
+root.title("Student Management System")
+root.geometry('500x500')  
+
+# Option menu with list of all class codes
+selected_class = StringVar()
+class_menu = OptionMenu(root, selected_class, *class_list, command=populate_student_list)
+selected_class.set(class_list[0])
+class_menu.grid(row=0, column=0)
+
+
+# Listbox with student names
+student_listbox = Listbox(root, selectmode=SINGLE)
+
+student_listbox.grid(row=0, column=1)
+
+# Button to get details on selected student
+details_button = Button(root, text="Select", command=display_details)
+details_button.grid(row=1, column=1)
+
+# Label to display student details
+student_details = StringVar()
+details_label = Label(root, textvariable=student_details, justify=LEFT)
+details_label.grid(row=0, column=2)
+
+
+# Run program by creating GUI
 root.mainloop()

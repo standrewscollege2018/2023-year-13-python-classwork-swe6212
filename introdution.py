@@ -1,4 +1,8 @@
-''' Student management system '''
+''' Student management system with GUI '''
+
+from tkinter import *
+
+############### Class definition for Student ###################
 
 class Student:
     ''' Student objects have attributes like name, phone, address, and a list of
@@ -21,8 +25,9 @@ class Student:
         # Student is automatically enrolled
         self._enrolled = True
 
-        # Add the new student to the students list
+        # Add the new student to the students list and name to student_names list
         students.append(self)
+        student_names.append(self._name)
     
     
     def get_name(self):
@@ -69,63 +74,12 @@ class Student:
         print()
         print("=" * 30)
 
-# list to store all students
+# lists to store all students and names
 students = []
-
-# Create students
-Student("John Smith", 18, "027123123", ["DIGI", "MATH"])
-Student("Joanna Smith", 17, "021321321", ["DIGI", "BIOL"])
-
-def search():
-    ''' User searches for student '''
-
-    # User enters name to search for
-    name_search = input("Enter name to search for: ")
-    # Loop through list of students
-    # Check if the name of a student matches name_search
-    # If so, display their details
-    for s in students:
-        # for an exact match use: if name_search == s.get_name():
-        # for a search matching any characters use: if name_search in s.get_name():
-
-        # This line returns results if either first or last name matches
-        if name_search.lower()+" " in s.get_name().lower() or " "+name_search.lower() in s.get_name().lower():
-            s.display_my_info()
+student_names = []
 
 
-def display_all():
-    ''' Display names of all students '''
-
-    for s in students:
-        s.display_my_info()
-
-def add_student():
-    ''' User can add a new student '''
-
-    print("Enter new student details")
-    print("-"*20)
-    name = input("Name: ")
-    # Put error catching around age (use try and except)
-    enter_age = True
-    while enter_age:
-        try:
-            age = int(input("Age: "))
-            enter_age = False
-        except ValueError:
-            print("Enter an integer")
-    phone = input("Phone: ")
-    student_classes = []
-    enter_class = True
-    while enter_class:
-        new_class = input("Class code(end to stop): ")
-        if new_class == "end":
-            # user has finished entering classes
-            enter_class = False
-        else:
-            # add class code to list of classes
-            student_classes.append(new_class)
-    # Create new student
-    Student(name, age, phone, student_classes)
+########### Functions ###################
 
 def generate_students():
     ''' Function imports students from csv file '''
@@ -141,30 +95,46 @@ def generate_students():
                 i += 1
             Student(line[0], int(line[1]), line[2], classes)
 
-# list to store all students class
-student_class = []
+def display_details():
+    ''' Display details of student selected in student_listbox'''
 
-
-# Create a function that gets the user to enter a class code, then
-# returns a list of all students who are in that class, along with a 
-# count of how many there are
-def class_search():
-    ''' User searches for students class code '''
-
-    # User enters class name to search for
-    class_search = input("Enter class name to search for: ")
-    # Loop through list of students class
-    # Check if the class name of a student matches class_search
-    # If so, display their details
-    for s in student_class:
-        # for an exact match use: if class_search == s.get_class():
-        # for a search matching any characters use: if class_search in s.get_class():
-
-        # This line returns results if either first or last name matches
-        if class_search.lower()+" " in s.get_class().lower() or " "+class_search.lower() in s.get_class().lower():
-            s.display_my_info()
+    # Start by getting the index of the selected student from the list of names
+    for c in student_listbox.curselection():
+        selected_student = student_names[c]
+    # Next we find the matching student and display their info in a label
+    for s in students:
+        if s.get_name() == selected_student:
+            details = f"{'='*30}\nName: {s.get_name()}\nPhone: {s.get_phone()}\nAge: {s.get_age()}\nClasses: {s.get_classes()}\n{'='*30}"
+            student_details.set(details)
 
 
 
+# Import all students from csv
 generate_students()
-search()
+
+
+############ GUI elements ################
+
+# Main window
+root = Tk()
+root.title("Student Management System")
+root.geometry('500x500')  
+
+# Listbox with student names
+student_listbox = Listbox(root, selectmode=SINGLE)
+for name in student_names:
+    student_listbox.insert(END, name)
+student_listbox.grid(row=0, column=0)
+
+# Button to get details on selected student
+details_button = Button(root, text="Select", command=display_details)
+details_button.grid(row=1, column=0)
+
+# Label to display student details
+student_details = StringVar()
+details_label = Label(root, textvariable=student_details, justify=LEFT)
+details_label.grid(row=0, column=1)
+
+
+# Run program by creating GUI
+root.mainloop()

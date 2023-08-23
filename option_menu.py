@@ -1,47 +1,54 @@
-#list of names to popular the options menu
+''' Option Menu example '''
+
+# list of names to populate the option menu
 names = ['Alan', 'Bob', 'Charles']
 
+######### Functions ##############
 def display_selection():
-    ''' display selected value from second option menu'''
+    ''' Display the selected value from the option menu '''
+
     print(selected_name.get())
 
-def display(n):
-    ''' display selected name from second option menu'''
-    print(n)
+def display(second_name):
+    ''' Display selected name from second option menu 
+    This function is sent the name by the option menu when a selection is made'''
 
-################ GUI start #############
+    print(second_name)
+
+
+############ GUI part ##############
+
 from tkinter import *
-
 root = Tk()
-root.title('Option Menue Example')
-root.geometry('1080x1080')
+root.title('OptionMenu example')
+root.geometry('400x300')
 
-#option menu containg list of names 
-#set up a variable to store the selected iteam
+# Option Menu containing list of names
+# Set up a variable to store the selected item
 selected_name = StringVar()
+# Set the initial selection to the first item in the names list
 selected_name.set(names[0])
-#second parmter is varable strong the selected iteam 
-#list populating the menue needs to have an * in front of it 
-
-
-
-
+# second parameter is variable storing the selected item
+# list populating the menu needs to have an * in front of it
 name_menu = OptionMenu(root, selected_name, *names)
-#name_menu.config(bg='#1234',fg='white')
+name_menu.config(width=20,bg='white', fg='black')
 name_menu.grid(row=0)
 
-#when you press the botton 
-go_button = Button(root, text="Go", command=display_selection)
-go_button.grid(row=2)
-
+# Second Option Menu containing list of names
+# Set up a variable to store the selected item
 selected_name2 = StringVar()
+# Set the initial selection to the first item in the names list
 selected_name2.set(names[0])
-
+# second parameter is variable storing the selected item
+# list populating the menu needs to have an * in front of it
 name_menu2 = OptionMenu(root, selected_name2, *names, command=display)
-#name_menu.config(bg='#1234',fg='white')
+name_menu2.config(width=20,bg='white', fg='black')
 name_menu2.grid(row=0, column=1)
 
 
+# When you press this button, it calls a function that prints the selected value
+go_button = Button(root, text="Go", command=display_selection)
+go_button.grid(row=2)
 
-#start running the program 
+# Start running the program
 root.mainloop()

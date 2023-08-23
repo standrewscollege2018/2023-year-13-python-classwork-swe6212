@@ -1,30 +1,32 @@
 from tkinter import *
 
-def doube_number():
-    x = number.get()
-    success_message.set(x*2)
+######## Functions #########
+def double():
+    ''' get the value entered in number_entry, double it, and set it to the number variable'''
 
-#Creating root window (belongs to tk class)
+    value = int(number_entry.get())
+    number.set(value*2)
+
+
+########### GUI creation ############
 root = Tk()
-root.title("Double It GUI")
+root.title("Double it")
+root.geometry('400x300')
 
-#Changing size
-root.geometry('500x300')
-root.resizable(width=FALSE, height=FALSE)
+# Entry field for number
+number_entry = Entry(root)
+number_entry.grid(row=0)
 
-#defining the function
+# Button to call double function
+double_button = Button(root, text="Double it!", command=double)
+double_button.grid(row=1)
+
+# Double label
 number = IntVar()
-number_entry = Entry(root, textvariable =number)
-number_entry.grid(row=2,column=1)
+label = Label(root, textvariable=number)
+label.grid(row=2)
 
-login_button = Button(root, text="Double It", bg="white", fg="black", command=doube_number)
-login_button.grid(row=2,column=0)
 
-success_message= StringVar()
 
-success_message.set("Show the doubled number")
-success_label = Label(root, textvariable=success_message)
-success_label.grid(row = 3, column=1)
- 
-#Run program
+# Start program
 root.mainloop()

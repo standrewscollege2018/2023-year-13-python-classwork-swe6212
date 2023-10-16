@@ -12,7 +12,7 @@ class Student:
     def __init__(self, name, age, phone, classes):
         ''' The init function is called automatically when the object is created'''
 
-         # Assign properties to new student
+        # Assign properties to new student
         # All properties have an underscore in front
         # This means the property is private to the object
         # and they can only be referenced by calling a getter
